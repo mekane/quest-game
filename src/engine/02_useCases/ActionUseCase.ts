@@ -1,5 +1,5 @@
 import {Repository} from "../dataStore/Repository";
-import {Game} from "../01_entities/Game";
+import {Game, GameId} from "../01_entities/Game";
 import {UseCase} from "./UseCase";
 
 export class ActionUseCase extends UseCase {
@@ -7,7 +7,7 @@ export class ActionUseCase extends UseCase {
         super();
     }
 
-    execute(foo) {
+    execute(gameId: GameId) {
         return {
             success: false,
             message: "No game found for id 'NOT FOUND'"

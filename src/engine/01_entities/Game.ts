@@ -1,9 +1,11 @@
 import {Quest} from "./Quest";
 
+export type GameId = string;
+
 export interface Game {
-  id: string,
-  name: string,
-  quest: {
-       [index: string]: Quest
-  }
+    id: GameId,
+    name: string,
+    quest: {
+        [index: string]: Quest
+    }
 }
