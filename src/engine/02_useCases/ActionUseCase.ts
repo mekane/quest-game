@@ -10,7 +10,7 @@ export class ActionUseCase extends UseCase {
     execute(gameId: GameId) {
         return {
             success: false,
-            message: "No game found for id 'NOT FOUND'"
+            message: `No game found for id '${gameId}'`
         }
     }
 }
