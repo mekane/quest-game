@@ -1,19 +1,74 @@
-export interface Identifiable {
-    id: string
-}
+import {Identifiable, Repository} from "./Repository";
+import fs from "fs";
+import path from "path";
 
-export abstract class Repository<Type extends Identifiable> {
-    private store = {};
+export class JsonFileRepository<Type extends Identifiable> extends Repository<Type> {
+    private readonly dataPath;
 
-    public list(): Type[] {
-        return Object.keys(this.store).map(k => this.store[k]);
+    public constructor(readonly fileStoreBaseDirectory: string, private readonly deserializer?: (str: string) => Type) {
+        super();
+
+        this.dataPath = fileStoreBaseDirectory;
+        JsonFileRepository.ensureDirectoryExists(fileStoreBaseDirectory);
     }
 
-    public getById(id: string): Type {
-        return this.store[id];
+    public getDataFor(dirKey: string, id: string): Type {
+        const userDir = path.resolve(this.dataPath, dirKey);
+        const fileName = path.resolve(userDir, JsonFileRepository.dataFileName(id))
+        let fileContents = '';
+        try {
+            fileContents = fs.readFileSync(fileName, 'utf8');
+        } catch (e) {
+            //console.log(e);
+            return null;
+        }
+
+        if (this.deserializer)
+            return this.deserializer(fileContents);
+        else
+            return null;
     }
 
-    public put(obj: Type) {
-        this.store[obj.id] = obj;
+    public listDataFor(dirKey: string): Type[] {
+        const userDir = path.resolve(this.dataPath, dirKey);
+        let listOfFiles = [];
+        try {
+            listOfFiles = fs.readdirSync(userDir, 'utf8');
+        } catch (e) {
+            console.log(e);
+            return []
+        }
+        return listOfFiles.map(stripJson);
+
+        function stripJson(fileName) {
+            if (fileName.endsWith('.json'))
+                return fileName.substring(0, fileName.length - 5);
+            return fileName;
+        }
+    }
+
+    public putDataFor(dirKey: string, obj: Type) {
+        const userDir = path.resolve(this.dataPath, dirKey);
+        const fileName = path.resolve(userDir, JsonFileRepository.dataFileName(obj.id));
+
+        JsonFileRepository.ensureDirectoryExists(userDir);
+        const file = fs.openSync(fileName, 'w');
+        fs.writeSync(file, JSON.stringify(obj));
+        fs.closeSync(file);
+    }
+
+    private static ensureDirectoryExists(directoryPath: string) {
+        //console.log(`[FileStore] ensure directory (${directoryPath}) exists`);
+        fs.mkdirSync(directoryPath, {recursive: true});
+    }
+
+    private static fileSafeName(name): string {
+        const noSpaces = name.trim().replace(/\s|-/g, '_');
+        const noSpecialChars = noSpaces.replace(/[\W]/g, '');
+        return noSpecialChars.toLowerCase();
+    }
+
+    private static dataFileName(name): string {
+        return JsonFileRepository.fileSafeName(name) + '.json';
     }
 }

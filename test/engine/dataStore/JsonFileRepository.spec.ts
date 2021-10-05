@@ -1,3 +1,5 @@
+import {Identifiable} from "../../../src/engine/dataStore/Repository";
+
 const exec = require('child_process').exec;
 const fs = require('fs');
 const path = require('path');
@@ -50,12 +52,12 @@ describe('Filesystem side effects when using JsonFileRepository', () => {
 
 describe('Setting and getting data', () => {
     it(`handles getting data for a key that doesn't exist`, () => {
-        const fileStore = new JsonFileRepository(testDataPath);
+        const fileStore = new JsonFileRepository(testDataPath, Identifiable.deserialize);
         expect(fileStore.getDataFor('testId', 'Nope')).toBeNull();
     });
 
     it('retrieves data at the same key that was used to set it', () => {
-        const fileStore = new JsonFileRepository(testDataPath);
+        const fileStore = new JsonFileRepository(testDataPath, Identifiable.deserialize);
         fileStore.putDataFor('testId', {id: 'f1'});
         fileStore.putDataFor('testId', {id: 'Test String'});
 
@@ -64,13 +66,32 @@ describe('Setting and getting data', () => {
     });
 
     it('persists across object instances', () => {
-        const fileStore1 = new JsonFileRepository(testDataPath);
+        const fileStore1 = new JsonFileRepository(testDataPath, Identifiable.deserialize);
         fileStore1.putDataFor('testId', {id: 'f1'});
-        fileStore1.putDataFor('testId', {id: 'Test String'});
+        fileStore1.putDataFor('testId', {id: 'f2'});
 
-        const fileStore2 = new JsonFileRepository(testDataPath);
-        expect(fileStore2.getDataFor('testId', '1')).toEqual({id: 'f1'})
-        expect(fileStore2.getDataFor('testId', '2')).toEqual({id: 'Test String'});
+        const fileStore2 = new JsonFileRepository(testDataPath, Identifiable.deserialize);
+        expect(fileStore2.getDataFor('testId', 'f1')).toEqual({id: 'f1'})
+        expect(fileStore2.getDataFor('testId', 'f2')).toEqual({id: 'f2'});
+    });
+
+    it('uses a deserialize function to reconstitute original classes', () => {
+        class TestClass extends Identifiable {
+            public name = 'My Test Class';
+        }
+
+        let deserializeCalled = 0;
+
+        function deserializer(json: string): TestClass {
+            deserializeCalled++;
+            return new TestClass('I was returned');
+        }
+
+        const fileStore = new JsonFileRepository<TestClass>(testDataPath, deserializer);
+        fileStore.putDataFor('testId', {id: 'f1', name: 'foo'});
+        const data = fileStore.getDataFor('testId', 'f1');
+        expect(deserializeCalled).toEqual(1);
+        expect(data.id).toEqual('I was returned')
     });
 });
 

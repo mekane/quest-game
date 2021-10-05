@@ -12,7 +12,8 @@
     "test": "test"
   },
   "scripts": {
-    "test": "jest -b --coverage"
+    "coverage": "jest --coverage",
+    "test": "jest -b"
   },
   "author": "Marty Kane",
   "license": "ISC",
