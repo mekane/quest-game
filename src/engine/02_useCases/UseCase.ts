@@ -4,5 +4,5 @@ export interface UseCaseExecutionResult {
 }
 
 export abstract class UseCase {
-    public abstract execute(args?: any): UseCaseExecutionResult
+    public abstract execute(...args: any): UseCaseExecutionResult
 }
