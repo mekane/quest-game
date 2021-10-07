@@ -11,7 +11,7 @@ export class ActionUseCase extends UseCase {
     private gameRepo;
     private actionReducer;
 
-    constructor(gameRepository: Repository<Game>, questReducer: (game:Game, action:ActionSpecifier) => Game) {
+    constructor(gameRepository: Repository<Game>, questReducer: (game: Game, action: ActionSpecifier) => Game) {
         super();
 
         this.gameRepo = gameRepository;
@@ -23,9 +23,16 @@ export class ActionUseCase extends UseCase {
         const game: Game = this.gameRepo.getDataFor('games', gameId)
 
         if (game) {
-            this.actionReducer(game,  action)
+            const newData = this.actionReducer(game, action)
 
-            //store result
+            try {
+                this.gameRepo.putDataFor('games', newData)
+            } catch (e) {
+                return {
+                    success: false,
+                    message: "Error saving action results: " + e.message
+                }
+            }
 
             return {
                 success: true,

@@ -10,10 +10,10 @@ describe('The Action Use Case', () => {
         const actionUseCase = new ActionUseCase(new SpyRepository<Game>(), stubReducer)
 
         const result = actionUseCase.execute('NOT FOUND', null)
-        expect(result).toEqual({success: false, message: "No game found for id 'NOT FOUND'"})
+        expect(result).toEqual(makeError("No game found for id 'NOT FOUND'"))
 
         const result2 = actionUseCase.execute('ALSO NOT FOUND', null)
-        expect(result2).toEqual({success: false, message: "No game found for id 'ALSO NOT FOUND'"})
+        expect(result2).toEqual(makeError("No game found for id 'ALSO NOT FOUND'"))
     })
 
     it('loads the specified game from the repository', () => {
@@ -32,7 +32,7 @@ describe('The Action Use Case', () => {
             observedAction = action;
             return data;
         }
-        const testGame = {id: 'testId', name: 'game', quest: {}};
+        const testGame = makeGame();
         const mockRepository = new MockRepository<Game>();
         mockRepository.putDataFor('games', testGame);
         const actionUseCase = new ActionUseCase(mockRepository, gameReducer)
@@ -44,4 +44,37 @@ describe('The Action Use Case', () => {
         expect(observedGameData).toEqual(testGame)
         expect(observedAction).toEqual(testAction)
     })
+
+    it('saves the results of the reducer back to the store', () => {
+        const expectedNewGameData = {id: 'testId', name: 'game', quest: {q1: {}}};
+        const gameReducer = () => expectedNewGameData;
+        const testGame = makeGame()
+        const mockRepository = new MockRepository<Game>();
+        mockRepository.putDataFor('games', testGame);
+        const actionUseCase = new ActionUseCase(mockRepository, gameReducer)
+
+        const result = actionUseCase.execute(testGame.id, {type: 'test'})
+        expect(mockRepository.getDataFor('games', testGame.id)).toEqual(expectedNewGameData);
+    })
+
+    it('returns an error if there is a problem saving the game', () => {
+        const errorOnSaveRepository = new MockRepository<Game>();
+        errorOnSaveRepository.putDataFor('games', makeGame())
+        errorOnSaveRepository.putDataFor = () => {
+            throw new Error('triggered error')
+        }
+
+        const actionUseCase = new ActionUseCase(errorOnSaveRepository, () => makeGame())
+        const result = actionUseCase.execute('testId', {type: 'test'})
+
+        expect(result).toEqual(makeError('Error saving action results: triggered error'))
+    })
 })
+
+function makeGame() {
+    return {id: 'testId', name: 'game', quest: {}}
+}
+
+function makeError(message) {
+    return {success: false, message}
+}
