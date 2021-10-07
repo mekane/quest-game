@@ -6,6 +6,6 @@ export interface Game {
     id: GameId,
     name: string,
     quest: {
-        [index: string]: Quest
+        [index: string]: object
     }
 }
