@@ -5,4 +5,4 @@ coverage/
 
 src/**/*.js
 
-test/engine/dataStore/fileStoreTestData/
+test/engine/*/fileStoreTestData/

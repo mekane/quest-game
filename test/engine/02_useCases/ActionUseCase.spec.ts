@@ -1,7 +1,7 @@
 import {ActionUseCase} from "../../../src/engine/02_useCases/ActionUseCase"
 import {Game} from "../../../src/engine/01_entities/Game";
-import {SpyRepository} from "../dataStore/SpyRepository";
-import {MockRepository} from "../dataStore/MockRepository";
+import {SpyRepository} from "../03_repositories/SpyRepository";
+import {MockRepository} from "../03_repositories/MockRepository";
 
 const stubReducer = (data, action) => data;
 

@@ -1,4 +1,4 @@
-import {Identifiable, Repository} from "../../../src/engine/dataStore/Repository";
+import {Identifiable, Repository} from "../../../src/engine/03_repositories/Repository";
 
 export class SpyRepository<Type extends Identifiable> extends Repository<Identifiable> {
     private getCalled: number;

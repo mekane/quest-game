@@ -1,4 +1,4 @@
-import {Repository} from "../dataStore/Repository";
+import {Repository} from "../03_repositories/Repository";
 import {Game, GameId} from "../01_entities/Game";
 import {UseCase} from "./UseCase";
 

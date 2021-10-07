@@ -1,10 +1,10 @@
-import {Identifiable} from "../../../src/engine/dataStore/Repository";
+import {Identifiable} from "../../../src/engine/03_repositories/Repository";
 
 const exec = require('child_process').exec;
 const fs = require('fs');
 const path = require('path');
 
-import {JsonFileRepository} from "../../../src/engine/dataStore/JsonFileRepository";
+import {JsonFileRepository} from "../../../src/engine/03_repositories/JsonFileRepository";
 
 const testDataPath = path.resolve(__dirname, 'fileStoreTestData');
 const removeTestDataCommand = `rm -rf ${testDataPath}`;
