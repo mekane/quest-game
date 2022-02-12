@@ -1,4 +1,4 @@
-import {defaultData, potionQuest} from "../../src/quests/potionQuest";
+import {defaultData, potionQuest} from "@quests/potionQuest";
 
 describe('The Potion Quest', () => {
     it('returns a default inital data structure if passed nothing', () => {

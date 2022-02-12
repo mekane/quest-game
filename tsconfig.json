@@ -6,6 +6,7 @@
       "@entities/*": ["engine/01_entities/*"],
       "@useCases/*": ["engine/02_useCases/*"],
       "@repositories/*": ["engine/03_repositories/*"],
+      "@quests/*": ["quests/*"]
     }
   }
 }

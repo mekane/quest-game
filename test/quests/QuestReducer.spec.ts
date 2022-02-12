@@ -1,4 +1,4 @@
-import {QuestMap, QuestReducer, Reducer} from "../../src/quests/QuestReducer";
+import {QuestMap, QuestReducer, Reducer} from "@quests/QuestReducer";
 import {Game} from "@entities/Game";
 
 describe('the QuestReducer class', () => {
