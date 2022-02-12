@@ -1,5 +1,5 @@
 import {Reducer} from "./QuestReducer";
-import {Quest} from "../engine/01_entities/Quest";
+import {Quest} from "@entities/Quest";
 
 export const defaultData:Quest = {
     bottle: false,

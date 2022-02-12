@@ -1,5 +1,5 @@
 import {QuestMap, QuestReducer, Reducer} from "../../src/quests/QuestReducer";
-import {Game} from "../../src/engine/01_entities/Game";
+import {Game} from "@entities/Game";
 
 describe('the QuestReducer class', () => {
     it('is initialized with a map of quest names => reducer functions', () => {

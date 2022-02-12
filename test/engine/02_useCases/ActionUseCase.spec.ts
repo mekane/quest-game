@@ -1,5 +1,5 @@
 import {ActionUseCase} from "../../../src/engine/02_useCases/ActionUseCase"
-import {Game} from "../../../src/engine/01_entities/Game";
+import {Game} from "@entities/Game";
 import {SpyRepository} from "../03_repositories/SpyRepository";
 import {MockRepository} from "../03_repositories/MockRepository";
 
