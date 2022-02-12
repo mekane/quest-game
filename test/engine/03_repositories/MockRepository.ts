@@ -1,4 +1,4 @@
-import {Identifiable, Repository} from "../../../src/engine/03_repositories/Repository";
+import {Identifiable, Repository} from "@repositories/Repository";
 
 export class MockRepository<Type extends Identifiable> extends Repository<Type> {
     private store = {};

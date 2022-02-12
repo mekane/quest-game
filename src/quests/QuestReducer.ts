@@ -1,5 +1,5 @@
 import {Game} from "@entities/Game";
-import {ActionSpecifier} from "../engine/02_useCases/ActionUseCase";
+import {ActionSpecifier} from "@useCases/ActionUseCase";
 import {Quest} from "@entities/Quest";
 
 export type Reducer = (questData: Quest, action: ActionSpecifier) => Quest;

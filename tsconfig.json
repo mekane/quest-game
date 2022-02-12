@@ -1,8 +1,11 @@
 {
   "compilerOptions": {
     "esModuleInterop": true,
+    "baseUrl": "./src",
     "paths": {
-      "@entities/*": ["./src/engine/01_entities/*"],
+      "@entities/*": ["engine/01_entities/*"],
+      "@useCases/*": ["engine/02_useCases/*"],
+      "@repositories/*": ["engine/03_repositories/*"],
     }
   }
 }
