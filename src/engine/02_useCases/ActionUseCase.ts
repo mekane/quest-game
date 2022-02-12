@@ -7,11 +7,13 @@ export interface ActionSpecifier {
     options?: {}
 }
 
-export class ActionUseCase extends UseCase {
-    private gameRepo;
-    private actionReducer;
+type ActionReducer = (game: Game, action: ActionSpecifier) => Game;
 
-    constructor(gameRepository: Repository<Game>, questReducer: (game: Game, action: ActionSpecifier) => Game) {
+export class ActionUseCase extends UseCase {
+    private gameRepo: Repository<Game>;
+    private actionReducer: ActionReducer;
+
+    constructor(gameRepository: Repository<Game>, questReducer: ActionReducer) {
         super();
 
         this.gameRepo = gameRepository;
